@@ -25,7 +25,6 @@ public class AuthController {
     @GetMapping("/ok")
     @ResponseStatus(code = HttpStatus.OK)
     public Map<String, Object> isOk() {
-        authUsecase.create("hello world");
         return Map.of("ok", true);
     }    
 
@@ -38,7 +37,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public Map<String, Object> register(@RequestBody RegisterRequestBody registerRequestBody) {
-        //to do
+        if (!registerRequestBody.isValid()) {
+            return Map.of(
+                "ok", false,
+                "error", "Bad Request"
+            );
+        }
+        //authUsecase.register(registerRequestBody.name, registerRequestBody.email, registerRequestBody.password);
         return Map.of("ok", true);
     }
     
