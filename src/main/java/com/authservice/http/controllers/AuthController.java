@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -27,6 +25,7 @@ public class AuthController {
     @GetMapping("/ok")
     @ResponseStatus(code = HttpStatus.OK)
     public Map<String, Object> isOk() {
+        authUsecase.create("hello world");
         return Map.of("ok", true);
     }    
 
