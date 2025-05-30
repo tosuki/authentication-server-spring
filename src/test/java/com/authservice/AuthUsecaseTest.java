@@ -3,24 +3,39 @@ package com.authservice;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.authservice.core.io.AuthError.EmailConflict;
 import com.authservice.core.io.AuthError.WrongCredentials;
+import com.authservice.core.repository.UserRepository;
 import com.authservice.core.usecase.AuthUsecase;
 import com.authservice.domain.ports.BCryptPasswordEncoder;
-import com.authservice.mocked.MockedUserRepositoryImpl;
 
+@ExtendWith(MockitoExtension.class)
 public class AuthUsecaseTest {
-    private final AuthUsecase authUsecase;
+    private UserRepository userRepository;
+    private AuthUsecase authUsecase;
+
+    @BeforeEach()
+    public void beforeEach() {
+        this.authUsecase = new AuthUsecase(userRepository, new BCryptPasswordEncoder());
+    }
+
+    @BeforeAll
+    public static void beforeAll() {
+        MockitoAnnotations.openMocks(AuthUsecaseTest.class);
+    }
 
     private final String testEmail = "okaabe2006@gmail.com";
     public final String testPassword = "P@ssw0rd!";
-
-    public AuthUsecaseTest() {
-        this.authUsecase = new AuthUsecase(new MockedUserRepositoryImpl(), new BCryptPasswordEncoder());
-    }
 
     public String registerUser() {
         return authUsecase.register("tester", testEmail, testPassword);
