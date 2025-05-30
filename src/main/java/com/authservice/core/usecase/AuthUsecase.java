@@ -25,6 +25,7 @@ public class AuthUsecase {
         return password;
     }
 
-    public void authenticate(String email, String password) {
+    public String authenticate(String email, String password) {
+        return password;
     }
 }
