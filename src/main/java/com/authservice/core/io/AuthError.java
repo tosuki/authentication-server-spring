@@ -22,4 +22,10 @@ public class AuthError extends CoreError {
             super(level, "Invalid passport");
         }
     }
+
+    public static class ExpiredToken extends AuthError {
+        public ExpiredToken(String level) {
+            super(level, "Expired token");
+        }
+    }
 }
