@@ -4,8 +4,8 @@ import com.authservice.core.io.IllegalError;
 import com.authservice.core.model.Session;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class JSONEncoder {
-    String encode(Session session) {
+public class JSONSerializer {
+    public static String encode(Session session) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
@@ -15,7 +15,7 @@ public class JSONEncoder {
         }
     }
 
-    Session decode(String jsonString) {
+    public static Session decode(String jsonString) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {

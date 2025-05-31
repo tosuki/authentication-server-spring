@@ -16,4 +16,10 @@ public class AuthError extends CoreError {
             super(level, "Wrong credentials");
         }
     }
+
+    public static class InvalidPassport extends AuthError {
+        public InvalidPassport(String level) {
+            super(level, "Invalid passport");
+        }
+    }
 }
