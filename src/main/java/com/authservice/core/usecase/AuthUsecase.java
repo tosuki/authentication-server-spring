@@ -53,6 +53,22 @@ public class AuthUsecase {
     }
 
     public String authenticate(String email, String password) {
-        return password;
+        try {
+            Optional<User> user = userRepository.getByEmail(email);
+
+            if (user.isEmpty()) {
+                throw new AuthError.WrongCredentials("auth usecase - authenticate|isEmpty");
+            }
+
+            if (!passwordEncoder.match(user.get().getPassword(), password)) {
+                throw new AuthError.WrongCredentials("auth usecase - authenticate|matches");
+            }
+
+            return passportEncoder.encode(user.get());
+        } catch (AuthError authError) {
+            throw authError;
+        } catch (Exception exception) {
+            throw new IllegalError.UnknownError(exception, "auth usecase - authenticate");
+        }
     }
 }
