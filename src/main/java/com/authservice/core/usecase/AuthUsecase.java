@@ -1,6 +1,7 @@
 package com.authservice.core.usecase;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,7 @@ public class AuthUsecase {
 
             String encryptedPassword = passwordEncoder.encode(data.password);            
             User user = userRepository.save(User.builder()
+                .id(UUID.randomUUID().toString())
                 .name(data.name)
                 .email(data.email)
                 .password(encryptedPassword)
