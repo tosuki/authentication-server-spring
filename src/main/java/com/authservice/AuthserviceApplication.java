@@ -29,8 +29,8 @@ public class AuthserviceApplication {
 		Logger.info("Passport: " + passport);
 
 		try {
-			Session session = passportEncoder.decode(passport);
-			Logger.info("Decoded Session: " + JSONSerializer.encode(session));
+			Session session = passportEncoder.decode("dawd");
+			System.out.println(session);
 		} catch (Exception e) {
 			Logger.error("Error decoding passport: " + e.getMessage());
 		}

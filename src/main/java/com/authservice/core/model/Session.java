@@ -18,4 +18,20 @@ public class Session {
     public long timestamp;
     public long expiresAt;
     public long issuedAt;
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("Session{")
+          .append("id='").append(id).append('\'')
+          .append(", name='").append(name).append('\'')
+          .append(", email='").append(email).append('\'')
+          .append(", timestamp=").append(timestamp)
+          .append(", expiresAt=").append(expiresAt)
+          .append(", issuedAt=").append(issuedAt)
+          .append('}');
+        
+        return sb.toString();
+    }
 }

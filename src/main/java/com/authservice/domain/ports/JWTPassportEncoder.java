@@ -2,7 +2,12 @@ package com.authservice.domain.ports;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.authservice.core.io.AuthError;
+import com.authservice.core.io.IllegalError;
+import com.authservice.core.io.Logger;
+import com.authservice.core.io.IllegalError.JSONDeserializationError;
 import com.authservice.core.model.Session;
 import com.authservice.core.model.User;
 import com.authservice.core.ports.PassportEncoder;
@@ -32,7 +37,7 @@ public class JWTPassportEncoder implements PassportEncoder {
             String passport = JWT.create()
                     .withIssuer("auth-service")
                     .withSubject(user.getId())
-                    .withPayload(JSONSerializer.encode(session)) // Assuming JSONSerializer is a utility to convert Session to JSON
+                    .withClaim("session", JSONSerializer.encode(session)) // Assuming JSONSerializer is a utility to convert Session to JSON
                     .withIssuedAt(new java.util.Date(session.getIssuedAt()))
                     .withExpiresAt(new java.util.Date(session.getExpiresAt()))
                     .sign(algorithm);
@@ -45,7 +50,24 @@ public class JWTPassportEncoder implements PassportEncoder {
 
     @Override
     public Session decode(String passport) {
-        throw new UnsupportedOperationException("Unimplemented method 'decode'");
+        try {
+            DecodedJWT decodedJWT = JWT.decode(passport);
+            Session session = JSONSerializer.decode(decodedJWT.getClaim("session").asString()); // Assuming JSONSerializer can decode JSON to Session
+
+            String subject = decodedJWT.getSubject();
+
+            if (subject == null || !subject.equals(session.getId())) {
+                throw new AuthError.InvalidPassport("jwt passport encoder - decode: subject mismatch");
+            }
+
+            return session;
+        } catch (JWTDecodeException e) {
+            throw new AuthError.InvalidPassport("jwt passport encoder - decode: JWT decode error");
+        } catch (JSONDeserializationError e) {
+            throw new AuthError.InvalidPassport("jwt passport encoder" + " - decode");
+        } catch (Exception e) {
+            throw new IllegalError.UnknownError(e, "jwt passport encoder - decode");
+        }
     }
 
     @Override
