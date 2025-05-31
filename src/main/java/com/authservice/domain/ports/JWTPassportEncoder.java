@@ -84,7 +84,6 @@ public class JWTPassportEncoder implements PassportEncoder {
 
     @Override
     public boolean isExpired(Session session) {
-        throw new UnsupportedOperationException("Unimplemented method 'isExpired'");
+        return session.getExpiresAt() < System.currentTimeMillis();
     }
-    
 }
