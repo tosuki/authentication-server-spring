@@ -16,4 +16,16 @@ public class IllegalError extends CoreError {
             super(level, String.format("An unknown exception was thrown: %s", exception));
         }
     }
+
+    public static class JSONSerializationError extends IllegalError {
+        public JSONSerializationError(String level, Exception e) {
+            super(level, String.format("Failed to serialize the object to JSON due to %s\n", e.getMessage()));
+        }
+    }
+    
+    public static class JSONDeserializationError extends IllegalError {
+        public JSONDeserializationError(String level, Exception e) {
+            super(level, String.format("Failed to deserialize the object from JSON due to %s\n", e.getMessage()));
+        }
+    }
 }
