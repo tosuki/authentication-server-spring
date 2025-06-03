@@ -1,6 +1,14 @@
-version: '3.1'
-
 services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    environment:
+      - REDIS_PASSWORD=root
+      - REDIS_PORT=6379
+    ports:
+      - "6379:6379"
+
   db:
     container_name: globalpostgres
     image: postgres

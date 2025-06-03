@@ -28,5 +28,6 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private boolean verified;
     private Timestamp timestamp;
 }
