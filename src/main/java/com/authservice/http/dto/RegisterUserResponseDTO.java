@@ -1,0 +1,32 @@
+package com.authservice.http.dto;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+public class RegisterUserResponseDTO extends AuthHttpResponseDTO<String> {
+    public RegisterUserResponseDTO(boolean ok, String message, String data) {
+        super(ok, message, data);
+    }
+
+    public static ResponseEntity<Object> lacking() {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(RegisterUserResponseDTO.builder()
+                .ok(false)
+                .message("Bad Request")
+                .data(null)
+                .build()
+            );
+    }
+
+    public static ResponseEntity<Object> authorize(String passport) {
+        return ResponseEntity
+            .status(HttpStatus.ACCEPTED)
+            .body(RegisterUserResponseDTO.builder()
+                .ok(true)
+                .message("Authorized")
+                .data(passport)
+                .build()
+            );
+    }
+}

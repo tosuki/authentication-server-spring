@@ -2,11 +2,11 @@ version: '3.1'
 
 services:
   db:
-    container_name: postgres_auth
+    container_name: globalpostgres
     image: postgres
     restart: always
     environment:
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: auth
+      POSTGRES_DB: tosuki_auth
     ports:
       - "5432:5432"
