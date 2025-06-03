@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.authservice.core.dto.AuthenticateUserDTO;
 import com.authservice.core.dto.RegisterUserDTO;
 import com.authservice.core.io.AuthError;
+import com.authservice.core.model.PassportValidation;
 import com.authservice.core.usecase.AuthUsecase;
 import com.authservice.http.dto.AuthHttpResponseDTO;
 import com.authservice.http.dto.AuthenticateUserResponseDTO;
 import com.authservice.http.dto.RegisterUserResponseDTO;
+import com.authservice.http.dto.ValidationPassportResponseDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,8 +48,18 @@ public class AuthController {
     }
 
     @PostMapping("/validate-token")
-    public ResponseEntity<Object> validateToken(@RequestBody String token) {
-        
+    public ResponseEntity<Object> validateToken(@RequestBody String passport) {
+        try {
+            if (passport == null || passport.isEmpty()) {
+                return ValidationPassportResponseDTO.lacking();
+            }
+
+            PassportValidation passportValidation = authUsecase.validatePassport(passport);
+
+            return ValidationPassportResponseDTO.sucess(passportValidation);
+        } catch (Exception e) {
+            return ValidationPassportResponseDTO.error(e);
+        }
     }
 
     @PostMapping("/authenticate")
