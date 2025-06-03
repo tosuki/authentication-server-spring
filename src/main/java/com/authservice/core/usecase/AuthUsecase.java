@@ -9,6 +9,9 @@ import com.authservice.core.dto.AuthenticateUserDTO;
 import com.authservice.core.dto.RegisterUserDTO;
 import com.authservice.core.io.AuthError;
 import com.authservice.core.io.IllegalError;
+import com.authservice.core.model.PassportExpiration;
+import com.authservice.core.model.PassportValidation;
+import com.authservice.core.model.Session;
 import com.authservice.core.model.User;
 import com.authservice.core.ports.PassportEncoder;
 import com.authservice.core.ports.PasswordEncoder;
@@ -28,6 +31,33 @@ public class AuthUsecase {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.passportEncoder = passportEncoder;
+    }
+
+    public PassportValidation validatePassport(String passport) {
+        try {
+            Session session = passportEncoder.decode(passport);
+
+            return PassportValidation.builder()
+                .passport(passport)
+                .session(session)
+                .expiration(PassportExpiration.VALID)
+                .build();
+        } catch (AuthError.ExpiredToken expiredToken) {
+            return PassportValidation.builder()
+                .passport(passport)
+                .session(null)
+                .expiration(PassportExpiration.EXPIRED)
+                .build();
+
+        } catch (AuthError.InvalidPassport invalidPassport) {
+            return PassportValidation.builder()
+                .passport(passport)
+                .session(null)
+                .expiration(PassportExpiration.INVALID)
+                .build();
+        } catch (Exception exception) {
+            throw new IllegalError.UnknownError(exception, "auth usecase - validatePassport");
+        }
     }
 
     public String register(RegisterUserDTO data) {

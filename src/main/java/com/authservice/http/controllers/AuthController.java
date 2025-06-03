@@ -45,6 +45,11 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/validate-token")
+    public ResponseEntity<Object> validateToken(@RequestBody String token) {
+        
+    }
+
     @PostMapping("/authenticate")
     public ResponseEntity<Object> authenticate(@RequestBody AuthenticateUserDTO data) {
         try {
