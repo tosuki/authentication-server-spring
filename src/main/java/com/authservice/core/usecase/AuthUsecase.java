@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.authservice.core.dto.AuthenticateUserDTO;
 import com.authservice.core.dto.RegisterUserDTO;
 import com.authservice.core.io.AuthError;
 import com.authservice.core.io.IllegalError;
@@ -54,15 +55,15 @@ public class AuthUsecase {
         }
     }
 
-    public String authenticate(String email, String password) {
+    public String authenticate(AuthenticateUserDTO data) {
         try {
-            Optional<User> user = userRepository.getByEmail(email);
+            Optional<User> user = userRepository.getByEmail(data.email);
 
             if (user.isEmpty()) {
                 throw new AuthError.WrongCredentials("auth usecase - authenticate|isEmpty");
             }
 
-            if (!passwordEncoder.match(user.get().getPassword(), password)) {
+            if (!passwordEncoder.match(user.get().getPassword(), data.password)) {
                 throw new AuthError.WrongCredentials("auth usecase - authenticate|matches");
             }
 

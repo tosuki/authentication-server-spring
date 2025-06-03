@@ -42,4 +42,12 @@ public class AuthController {
             return RegisterUserResponseDTO.error(e);
         }
     }
+
+    @PostMapping("/authenticate")
+    public String authenticate(@RequestBody String entity) {
+        //TODO: process POST request
+        
+        return entity;
+    }
+    
 }
