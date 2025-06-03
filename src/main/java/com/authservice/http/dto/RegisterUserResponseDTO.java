@@ -8,17 +8,6 @@ public class RegisterUserResponseDTO extends AuthHttpResponseDTO<String> {
         super(ok, message, data);
     }
 
-    public static ResponseEntity<Object> lacking() {
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(RegisterUserResponseDTO.builder()
-                .ok(false)
-                .message("Bad Request")
-                .data(null)
-                .build()
-            );
-    }
-
     public static ResponseEntity<Object> emailConflict(String email) {
         return ResponseEntity
             .status(HttpStatus.CONFLICT)

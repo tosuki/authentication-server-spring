@@ -21,6 +21,17 @@ public class AuthHttpResponseDTO <T> {
         );
     }
 
+    public static ResponseEntity<Object> lacking() {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(RegisterUserResponseDTO.builder()
+                .ok(false)
+                .message("Bad Request")
+                .data(null)
+                .build()
+            );
+    }
+
     public static ResponseEntity<Object> error(Exception exception) {
         Logger.error(exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
