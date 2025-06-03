@@ -1,13 +1,20 @@
 package com.authservice.core.io;
 
+import lombok.Getter;
+
 public class AuthError extends CoreError {
     public AuthError(String level, String message) {
         super("Authentication", level, message);
     }
 
+    @Getter
     public static class EmailConflict extends AuthError {
+        private final String email;
+    
         public EmailConflict(String level, String email) {
             super(level, String.format("The email %s is occupied!", email));
+            
+            this.email = email;
         } 
     }
 

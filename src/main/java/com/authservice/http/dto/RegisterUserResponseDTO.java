@@ -19,6 +19,17 @@ public class RegisterUserResponseDTO extends AuthHttpResponseDTO<String> {
             );
     }
 
+    public static ResponseEntity<Object> emailConflict(String email) {
+        return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(RegisterUserResponseDTO.builder()
+                .ok(false)
+                .message(email + " is occupied")
+                .data(null)
+                .build()
+            );
+    }
+
     public static ResponseEntity<Object> authorize(String passport) {
         return ResponseEntity
             .status(HttpStatus.ACCEPTED)

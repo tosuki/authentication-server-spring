@@ -1,5 +1,7 @@
 package com.authservice.core.model;
 
+import java.sql.Timestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -26,5 +28,5 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private long timestamp;
+    private Timestamp timestamp;
 }
