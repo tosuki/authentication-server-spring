@@ -3,10 +3,12 @@ package com.authservice.http.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.authservice.core.dto.AuthenticateUserDTO;
 import com.authservice.core.dto.RegisterUserDTO;
 import com.authservice.core.io.AuthError;
 import com.authservice.core.usecase.AuthUsecase;
 import com.authservice.http.dto.AuthHttpResponseDTO;
+import com.authservice.http.dto.AuthenticateUserResponseDTO;
 import com.authservice.http.dto.RegisterUserResponseDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +46,19 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public String authenticate(@RequestBody String entity) {
+    public ResponseEntity<Object> authenticate(@RequestBody AuthenticateUserDTO data) {
         try {
-            
+            if (!data.validate()) {
+                return AuthHttpResponseDTO.lacking();
+            }
+
+            String passport = authUsecase.authenticate(data);
+
+            return AuthenticateUserResponseDTO.authorize(passport);
+        } catch (AuthError.WrongCredentials wrongCredentials) {
+            return AuthenticateUserResponseDTO.wrongCredentials();
         } catch (Exception e) {
-            return 
+            return AuthHttpResponseDTO.error(e);
         }
     }
     

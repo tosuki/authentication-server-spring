@@ -6,4 +6,8 @@ import lombok.Builder;
 public class AuthenticateUserDTO {
     public String email;
     public String password;    
+
+    public boolean validate() {
+        return email != null && !email.isEmpty() && password != null && !password.isEmpty();
+    }
 }
