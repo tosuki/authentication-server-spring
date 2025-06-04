@@ -60,7 +60,7 @@ public class AuthUsecase {
         }
     }
 
-    public String register(RegisterUserDTO data) {
+    public User register(RegisterUserDTO data) {
         try {
             Optional<User> emailConflicts = userRepository.getByEmail(data.email);
 
@@ -69,15 +69,15 @@ public class AuthUsecase {
             }
 
             String encryptedPassword = passwordEncoder.encode(data.password);            
-            User user = userRepository.save(User.builder()
+            User user = User.builder()
                 .id(UUID.randomUUID().toString())
                 .name(data.name)
                 .email(data.email)
                 .password(encryptedPassword)
-                .build()
-            );
+                .verified(false)
+                .build();
 
-            return passportEncoder.encode(user);
+            return user;
         } catch (AuthError authError) {
             throw authError;
         } catch (Exception exception) {

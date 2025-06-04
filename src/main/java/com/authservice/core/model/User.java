@@ -30,4 +30,16 @@ public class User {
     private String password;
     private boolean verified;
     private Timestamp timestamp;
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +  
+            ", email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            ", verified=" + verified +
+            ", timestamp=" + timestamp +
+            '}';
+    }
 }

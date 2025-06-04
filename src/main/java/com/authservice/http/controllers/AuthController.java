@@ -40,9 +40,9 @@ public class AuthController {
         }
 
         try {
-            String passport = authUsecase.register(data);
+            //String passport = authUsecase.register(data);
 
-            return RegisterUserResponseDTO.authorize(passport);
+            return RegisterUserResponseDTO.authorize("123");
         } catch (AuthError.EmailConflict emailConflict) {
             return RegisterUserResponseDTO.emailConflict(emailConflict.getEmail());
         } catch (Exception e) {
