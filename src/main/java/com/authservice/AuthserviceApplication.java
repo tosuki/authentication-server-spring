@@ -1,11 +1,11 @@
 package com.authservice;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import com.authservice.core.model.EmailConfirmation;
 import com.authservice.core.model.User;
-import com.authservice.core.repository.EmailConfirmationQueue;
+import com.authservice.core.queue.EmailConfirmationQueue;
+import com.authservice.domain.queue.EmailConfirmationQueueImpl;
 
 /**
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,9 +18,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 */
 public class AuthserviceApplication {
 	public static void main(String[] args) {
-		EmailConfirmationQueue emailConfirmationQueue = new EmailConfirmationQueue();
+		EmailConfirmationQueue emailConfirmationQueue = new EmailConfirmationQueueImpl();
 
-		emailConfirmationQueue.startCleanupThread();
+		emailConfirmationQueue.startWatcher();
 		emailConfirmationQueue.add(EmailConfirmation.builder()
 			.user(User.builder()
 				.id("123")
@@ -50,6 +50,7 @@ public class AuthserviceApplication {
 			} else {
 				System.out.println("Email confirmation not found or expired.");
 			}
+			emailConfirmationQueue.interruptWatcher();
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
