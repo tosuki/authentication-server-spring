@@ -1,5 +1,5 @@
 package com.authservice.core.ports;
 
 public interface EmailServiceProvider {
-    void sendEmail(String message);
+    void sendEmail(String message, String recipient);
 }

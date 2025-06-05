@@ -6,10 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.authservice.core.dto.AuthenticateUserDTO;
 import com.authservice.core.dto.RegisterUserDTO;
 import com.authservice.core.io.AuthError;
+import com.authservice.core.io.Logger;
+import com.authservice.core.model.EmailConfirmation;
 import com.authservice.core.model.PassportValidation;
 import com.authservice.core.usecase.AuthUsecase;
 import com.authservice.http.dto.AuthHttpResponseDTO;
 import com.authservice.http.dto.AuthenticateUserResponseDTO;
+import com.authservice.http.dto.ConfirmEmailResponseDTO;
 import com.authservice.http.dto.RegisterUserResponseDTO;
 import com.authservice.http.dto.ValidationPassportResponseDTO;
 
@@ -39,9 +42,9 @@ public class AuthController {
         }
 
         try {
-            //String passport = authUsecase.register(data);
+            EmailConfirmation emailConfirmation = authUsecase.register(data);
 
-            return RegisterUserResponseDTO.authorize("123");
+            return RegisterUserResponseDTO.authorize(emailConfirmation.getUser().getEmail());
         } catch (AuthError.EmailConflict emailConflict) {
             return RegisterUserResponseDTO.emailConflict(emailConflict.getEmail());
         } catch (Exception e) {
@@ -49,10 +52,18 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/validate-register/{confirmationCode}")
-    public String validateRegistration(@PathVariable String confirmationCode) {
-        //to do
-        return new String();
+    @GetMapping("/confirmEmail/{confirmationCode}")
+    public ResponseEntity<Object> confirmEmail(@PathVariable String confirmationCode) {
+        Logger.warn("The confirmation code is %s", confirmationCode);
+        try {
+            String passport = authUsecase.confirmEmail(confirmationCode);
+
+            return ConfirmEmailResponseDTO.authorize(passport);
+        } catch (AuthError.InvalidConfirmationCode invalidConfirmationCode) {
+            return ConfirmEmailResponseDTO.invalid();
+        } catch (Exception e) {
+            return ConfirmEmailResponseDTO.error(e);
+        }
     }
     
 

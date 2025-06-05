@@ -3,6 +3,8 @@ package com.authservice.http.dto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.authservice.core.model.EmailConfirmation;
+
 public class RegisterUserResponseDTO extends AuthHttpResponseDTO<String> {
     public RegisterUserResponseDTO(boolean ok, String message, String data) {
         super(ok, message, data);
@@ -19,13 +21,13 @@ public class RegisterUserResponseDTO extends AuthHttpResponseDTO<String> {
             );
     }
 
-    public static ResponseEntity<Object> authorize(String passport) {
+    public static ResponseEntity<Object> authorize(String email) {
         return ResponseEntity
             .status(HttpStatus.ACCEPTED)
             .body(RegisterUserResponseDTO.builder()
                 .ok(true)
                 .message("Authorized")
-                .data(passport)
+                .data(email)
                 .build()
             );
     }

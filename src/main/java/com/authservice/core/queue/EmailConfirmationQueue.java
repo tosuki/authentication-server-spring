@@ -1,7 +1,6 @@
 package com.authservice.core.queue;
 
 import java.util.Optional;
-import java.util.concurrent.DelayQueue;
 
 import com.authservice.core.model.EmailConfirmation;
 

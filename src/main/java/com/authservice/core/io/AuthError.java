@@ -35,4 +35,10 @@ public class AuthError extends CoreError {
             super(level, "Expired token");
         }
     }
+
+    public static class InvalidConfirmationCode extends AuthError {
+        public InvalidConfirmationCode(String level) {
+            super(level, "Invalid confirmation code");
+        }
+    }
 }

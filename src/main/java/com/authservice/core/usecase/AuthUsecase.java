@@ -9,12 +9,15 @@ import com.authservice.core.dto.AuthenticateUserDTO;
 import com.authservice.core.dto.RegisterUserDTO;
 import com.authservice.core.io.AuthError;
 import com.authservice.core.io.IllegalError;
+import com.authservice.core.model.EmailConfirmation;
 import com.authservice.core.model.PassportExpiration;
 import com.authservice.core.model.PassportValidation;
 import com.authservice.core.model.Session;
 import com.authservice.core.model.User;
+import com.authservice.core.ports.EmailServiceProvider;
 import com.authservice.core.ports.PassportEncoder;
 import com.authservice.core.ports.PasswordEncoder;
+import com.authservice.core.queue.EmailConfirmationQueue;
 import com.authservice.core.repository.UserRepository;
 
 @Service
@@ -22,15 +25,21 @@ public class AuthUsecase {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private PassportEncoder passportEncoder;
+    private EmailConfirmationQueue emailConfirmationQueue;
+    private EmailServiceProvider emailServiceProvider;
 
     public AuthUsecase(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
-        PassportEncoder passportEncoder
+        PassportEncoder passportEncoder,
+        EmailConfirmationQueue emailConfirmationQueue,
+        EmailServiceProvider emailServiceProvider
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.passportEncoder = passportEncoder;
+        this.emailServiceProvider = emailServiceProvider;
+        this.emailConfirmationQueue = emailConfirmationQueue;
     }
 
     public PassportValidation validatePassport(String passport) {
@@ -60,7 +69,7 @@ public class AuthUsecase {
         }
     }
 
-    public User register(RegisterUserDTO data) {
+    public EmailConfirmation register(RegisterUserDTO data) {
         try {
             Optional<User> emailConflicts = userRepository.getByEmail(data.email);
 
@@ -77,11 +86,44 @@ public class AuthUsecase {
                 .verified(false)
                 .build();
 
-            return user;
+            EmailConfirmation emailConfirmation = EmailConfirmation.builder()
+                .confirmationCode(UUID.randomUUID().toString())
+                .user(user)
+                .expirationTime(System.currentTimeMillis() + 60*5*1000)//5 minutes
+                .build();
+
+            emailServiceProvider.sendEmail(
+                emailConfirmation.getConfirmationCode(),
+                user.getEmail()
+            );
+            emailConfirmationQueue.add(emailConfirmation);
+
+            return emailConfirmation;
         } catch (AuthError authError) {
             throw authError;
         } catch (Exception exception) {
             throw new IllegalError.UnknownError(exception, "auth usecase - register");
+        }
+    }
+
+    public String confirmEmail(String confirmationCode) {
+        try {
+            Optional<EmailConfirmation> emailConfirmationOptional = emailConfirmationQueue.getByConfirmationCode(confirmationCode);
+            
+            if (emailConfirmationOptional.isEmpty()) {
+                throw new AuthError.InvalidConfirmationCode("auth usecase - confirmEmail|isEmpty");
+            }
+
+            EmailConfirmation emailConfirmation = emailConfirmationOptional.get();
+            User user = userRepository.save(emailConfirmation.getUser());
+
+            String passport = passportEncoder.encode(user);
+
+            return passport;
+        } catch (AuthError authError) {
+            throw authError;
+        } catch (Exception exception) {
+            throw new IllegalError.UnknownError(exception, "auth usecase - confirmEmail");
         }
     }
 

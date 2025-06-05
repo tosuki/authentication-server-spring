@@ -4,6 +4,7 @@ package com.authservice.domain.queue;
 import java.util.Optional;
 import java.util.concurrent.DelayQueue;
 
+import com.authservice.core.io.Logger;
 import com.authservice.core.model.EmailConfirmation;
 import com.authservice.core.queue.EmailConfirmationQueue;
 
@@ -31,14 +32,13 @@ public class EmailConfirmationQueueImpl implements EmailConfirmationQueue {
                 try {
                     while(true) {
                         EmailConfirmation emailConfirmation = queue.take();
-                        System.out.println("Processing expired email confirmation: " + emailConfirmation);
+                        Logger.warn("Processing expired email confirmation: %s", emailConfirmation);
                     }
 
                 } catch (InterruptedException e) {
-                    System.out.println("Cleanup thread interrupted, stopping...");
                     Thread.currentThread().interrupt();
                 } finally {
-                    System.out.println("Cleanup thread interrupted, stopping...");
+                    Logger.warn("Stopping cleanup thread (Email Confirmation Queue)...");
                 }
             }
         });
