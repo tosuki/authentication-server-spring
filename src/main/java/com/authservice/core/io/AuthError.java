@@ -41,4 +41,10 @@ public class AuthError extends CoreError {
             super(level, "Invalid confirmation code");
         }
     }
+
+    public static class InvalidRoleID extends AuthError {
+        public InvalidRoleID() {
+            super("", "Invalid role ID");
+        }
+    }
 }

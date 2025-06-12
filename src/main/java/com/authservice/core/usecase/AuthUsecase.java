@@ -14,6 +14,7 @@ import com.authservice.core.model.PassportExpiration;
 import com.authservice.core.model.PassportValidation;
 import com.authservice.core.model.Session;
 import com.authservice.core.model.User;
+import com.authservice.core.model.UserRole;
 import com.authservice.core.ports.EmailServiceProvider;
 import com.authservice.core.ports.PassportEncoder;
 import com.authservice.core.ports.PasswordEncoder;
@@ -83,6 +84,7 @@ public class AuthUsecase {
                 .name(data.name)
                 .email(data.email)
                 .password(encryptedPassword)
+                .roleID(UserRole.NORMAL.getRoleID())
                 .verified(false)
                 .build();
 

@@ -4,5 +4,6 @@ CREATE TABLE users (
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     verified BOOLEAN DEFAULT FALSE,
+    role_id INT NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

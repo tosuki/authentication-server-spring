@@ -30,6 +30,7 @@ public class JWTPassportEncoder implements PassportEncoder {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
+                .roleID(user.getRoleID())
                 .expiresAt(System.currentTimeMillis() + expirationTime)
                 .issuedAt(System.currentTimeMillis())
                 .build();

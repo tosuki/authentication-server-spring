@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 
 @RestController
@@ -67,8 +68,8 @@ public class AuthController {
     }
     
 
-    @PostMapping("/validate-token")
-    public ResponseEntity<Object> validateToken(@RequestBody String passport) {
+    @GetMapping("/validateToken")
+    public ResponseEntity<Object> validateToken(@RequestHeader("Authorization") String passport) {
         try {
             if (passport == null || passport.isEmpty()) {
                 return ValidationPassportResponseDTO.lacking();

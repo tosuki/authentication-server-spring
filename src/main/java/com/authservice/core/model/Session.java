@@ -15,6 +15,7 @@ public class Session {
     public String id;
     public String name;
     public String email;
+    public int roleID;
     public long timestamp;
     public long expiresAt;
     public long issuedAt;
@@ -27,6 +28,7 @@ public class Session {
           .append("id='").append(id).append('\'')
           .append(", name='").append(name).append('\'')
           .append(", email='").append(email).append('\'')
+          .append(", roleID=").append(roleID)
           .append(", timestamp=").append(timestamp)
           .append(", expiresAt=").append(expiresAt)
           .append(", issuedAt=").append(issuedAt)
